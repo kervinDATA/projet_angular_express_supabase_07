@@ -1,0 +1,40 @@
+<h2>Connexion</h2>
+<form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+  <div>
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      [(ngModel)]="credentials.email"
+      name="email"
+      required
+      #email="ngModel"
+    />
+    <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+      <div *ngIf="email.errors?.['required']">L'email est requis.</div>
+      <div *ngIf="email.errors?.['email']">L'email doit être valide.</div>
+    </div>
+  </div>
+
+  <div>
+    <label for="password">Mot de passe</label>
+    <input
+      type="password"
+      id="password"
+      [(ngModel)]="credentials.password"
+      name="password"
+      required
+      #password="ngModel"
+    />
+    <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+      <div *ngIf="password.errors?.['required']">Le mot de passe est requis.</div>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="loginForm.invalid">Se connecter</button>
+</form>
+
+<!-- Afficher les messages de connexion -->
+<div *ngIf="message" class="alert" [ngClass]="{'alert-success': message.includes('connecté'), 'alert-danger': message.includes('Erreur')}">
+  {{ message }}
+</div>

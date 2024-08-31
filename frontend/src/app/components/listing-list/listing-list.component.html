@@ -1,0 +1,87 @@
+<!-- Affichage d'un message d'accueil si l'utilisateur est connecté -->
+<div class="header">
+  <div class="header-title">Airbnb Paris</div>
+  <div class="header-buttons">
+    <!-- Boutons de connexion et inscription visibles uniquement si l'utilisateur n'est pas connecté -->
+    <button *ngIf="!isLoggedIn" (click)="goToSignup()">S'inscrire</button>
+    <button *ngIf="!isLoggedIn" (click)="goToLogin()">Se connecter</button>
+    <!-- Bouton de déconnexion visible uniquement si l'utilisateur est connecté -->
+    <button *ngIf="isLoggedIn" (click)="logout()">Déconnexion</button>
+  </div>
+</div>
+
+<!-- Message de bienvenue pour les utilisateurs connectés -->
+<div class="welcome-message" *ngIf="isLoggedIn">
+  {{ username }} connecté
+</div>
+
+<!-- Message indiquant que l'utilisateur sera redirigé -->
+<div *ngIf="isLoggedIn" class="user-dashboard-message">
+  <p>Vous serez redirigé vers votre tableau de bord dans quelques secondes...</p>
+</div>
+
+<!-- Contenu principal affiché uniquement pour les utilisateurs non connectés -->
+<div *ngIf="!isLoggedIn" class="listing-container">
+  <div class="search-filters">
+    <div class="search-box">
+      <label for="search">Rechercher par nom :</label>
+      <input type="text" id="search" [(ngModel)]="searchTerm" placeholder="Tapez un nom..." />
+      <button (click)="searchListings()">Rechercher</button>
+    </div>
+
+    <div class="filter-box">
+      <label for="neighbourhood">Filtrer par quartier :</label>
+      <select id="neighbourhood" [(ngModel)]="selectedNeighbourhood">
+        <option value="">Tous les quartiers</option>
+        <option *ngFor="let neighbourhood of neighbourhoods" [value]="neighbourhood">
+          {{ neighbourhood }}
+        </option>
+      </select>
+
+      <label for="roomType">Filtrer par type de chambre :</label>
+      <select id="roomType" [(ngModel)]="selectedRoomType">
+        <option value="">Tous les types</option>
+        <option *ngFor="let roomType of roomTypes" [value]="roomType">
+          {{ roomType }}
+        </option>
+      </select>
+
+      <label for="minPrice">Prix minimum :</label>
+      <input type="number" id="minPrice" [(ngModel)]="minPrice" placeholder="Prix min" />
+
+      <label for="maxPrice">Prix maximum :</label>
+      <input type="number" id="maxPrice" [(ngModel)]="maxPrice" placeholder="Prix max" />
+
+      <button (click)="filterListings()">Filtrer</button>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Quartier</th>
+        <th>Type de chambre</th>
+        <th>Prix</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let listing of listings">
+        <td>
+          <a [routerLink]="['/listing', listing.listing_id]">{{ listing.host_name }}</a>
+        </td>
+        <td>{{ listing.area }}</td>
+        <td>{{ listing.room_type }}</td>
+        <td>{{ listing.price }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button (click)="previousPage()" [disabled]="currentPage === 0">Précédent</button>
+  <button (click)="nextPage()">Suivant</button>
+</div>
+
+<!-- Message ou redirection pour les utilisateurs connectés -->
+<div *ngIf="isLoggedIn" class="user-dashboard-message">
+  <p>Vous êtes déjà connecté. Accédez à votre <a [routerLink]="['/dashboard']">tableau de bord</a>.</p>
+</div>
